@@ -5,7 +5,7 @@ This is a WebRTC-based communication interface (implemented with a Go WebRTC ser
 
 ### Account Setup
 
-To host this server, you need to have an account on the RoboMesh platform. We only offer this to selected labs and organizations. If you are interested in hosting an online interactive robot demo, please contact us at dyhsu@comp.nus.edu.sg and anxingx@comp.nus.edu.sg.
+To host this server, you need to have an account on the RoboMesh platform. We only offer this to selected labs and organizations. If you are interested in hosting an online interactive robot demo, please contact us at dyhsu@comp.nus.edu.sg, zhanghb@comp.nus.edu.sg, and anxingx@comp.nus.edu.sg.
 
 ### Getting Started with RoboMesh Platform
 
@@ -62,8 +62,8 @@ go version
 Navigate to the project directory and install Go dependencies:
 
 ```bash
-git clone SERVER_CONFIG_REPO_GIT_URL
-cd tomwebrtc/ && go mod download
+git clone https://github.com/AdaCompNUS/RoboMesh_Server.git
+cd RoboMesh_Server/ && go mod download
 ```
 
 ## 2. Config your channel
@@ -80,8 +80,6 @@ Then, you need to fill in the following information in the .env file:
 NODE_ID=XXXXXX
 NODE_TOKEN=XXXXXX
 ```
-
-For WS_URL, WS_PATH, and WS_URLSCHEME, Please contact us for the details.
 
 All configurable channel information is in the **.env** file. 
 
@@ -144,14 +142,13 @@ python ros_to_ffmpeg.py YOUR_ROS_TOPIC_TO_STREAMING --fps 15
 
 ### Start Video Stream from mutiple cameras
 
-If you want to stream multiple cameras, you can use OBS to concatenate multiple cameras to single stream. And the rest of the steps are the same as the single camera.
-
+If you need to stream multiple cameras, you can use OBS to combine them into a single stream. For cameras publishing as ROS topics, you can display them in separate windows and then add each as a window capture source in OBS. After that, the remaining setup is the same as for streaming a single camera.
 
 ## 3. Audio Stream  (Optional)
 
 The server receives Opus-encoded audio via RTP on port **5006** by default.
 
-### Start Audio Stream 
+### Start Audio Stream
 
 #### Setup Virtual Audio Devices (Optional)
 
@@ -215,12 +212,14 @@ For ROS2, you need to install the following packages:
 **Subscribers:**
 - `/robot_feedback` (String) - Robot feedback messages to relay back to user
 
+'end' is a special message to indicate that the task is complete. This is for stopping the blocking of the website interface. If you help the website interface to be able to interact with the robot during execution of the task, you can send this message at the beginning of the task.
+
 ### Configuration
 
 Edit `interface.py` to configure:
 - `self.target_ip` - IP address of the Go WebRTC server (default: `127.0.0.1`)
 - `self.target_port` - TCP port for receiving messages (default: `8080`)
-- `self.lefttop` / `self.rightbottom` - Screen coordinate calibration
+- `self.lefttop` / `self.rightbottom` - Screen coordinate calibration (This is usefull when you have multiple cameras but only one of them is interactable)
 
 If you don't want to use ROS, you can configure the interface by your own code.
 
@@ -250,7 +249,6 @@ ffmpeg -f alsa -i default -ar 48000 -c:a libopus -b:a 96k -f rtp rtp://127.0.0.1
 **Terminal 3: Start Go WebRTC Server**
 
 ```bash
-cd tomwebrtc
 go run main.go
 ```
 
