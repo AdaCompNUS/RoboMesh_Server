@@ -13,7 +13,7 @@ Once you have an account, follow these steps to set up your node:
 
 **Step 1: Login to RoboMesh**
 
-Visit the RoboMesh platform and log in with your credentials. 
+Visit the RoboMesh platform (https://robomesh.ssilabs.org/webapp/) and log in with your credentials. 
 
 ![Login Screen](imgs/img1.png)
 
@@ -102,16 +102,17 @@ The server receives VP8-encoded video via RTP on port **5004** by default.
 
 ### Start Video Stream from Webcam
 
-HOW TO SETUP AND FIND A WEBCAM STREAMING IN UBUNTU? NEED TO CONFIRM
+If you are not sure which webcam device to use (e.g., `/dev/video0`, `/dev/video2`), see
+[`WEBCAM_UBUNTU_SETUP.md`](WEBCAM_UBUNTU_SETUP.md) for Ubuntu setup and verification steps.
 
-Use ffmpeg to stream video from a webcam device or OBS stream virtual camera (e.g., `/dev/video2`): 
+Use ffmpeg to stream video from a webcam device or OBS stream virtual camera (e.g., `/dev/video0`): 
 
 ```bash
-ffmpeg -i /dev/video2 -an -vcodec libvpx -cpu-used 5 -deadline 1 -g 10 -error-resilient 1 -auto-alt-ref 1 -f rtp rtp://127.0.0.1:5004?pkt_size=1500
+ffmpeg -i /dev/video0 -an -vcodec libvpx -cpu-used 5 -deadline 1 -g 10 -error-resilient 1 -auto-alt-ref 1 -f rtp rtp://127.0.0.1:5004?pkt_size=1500
 ```
 
 **Parameters:**
-- `-i /dev/video2` - Input video device or RTMP URL
+- `-i /dev/video0` - Input video device or RTMP URL
 - `-an` - No audio (video only)
 - `-vcodec libvpx` - VP8 codec (required for WebRTC)
 - `-cpu-used 5` - Speed optimization (higher = faster, lower quality)
@@ -231,7 +232,7 @@ If you don't want to use ROS, you can configure the interface by your own code.
 
 If you use ffmpeg to streaming your webcam:
 ```bash
-ffmpeg -i /dev/video2 -an -vcodec libvpx -cpu-used 5 -deadline 1 -g 10 -error-resilient 1 -auto-alt-ref 1 -f rtp rtp://127.0.0.1:5004?pkt_size=1500
+ffmpeg -i /dev/video0 -an -vcodec libvpx -cpu-used 5 -deadline 1 -g 10 -error-resilient 1 -auto-alt-ref 1 -f rtp rtp://127.0.0.1:5004?pkt_size=1500
 ```
 
 If you want to stream your ROS topic:
@@ -282,3 +283,5 @@ python examples/example_ros2.py
 After creating the node, you'll see it in your node list. You can connect to it from the viewer interface.
 
 ![Node Card](imgs/img5.png)
+
+Try sending a text and test clicking on the selection.
